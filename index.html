@@ -224,7 +224,6 @@
   .bar-fill { height: 8px; border-radius: 4px; }
   .bar-val  { font-size: 12px; font-variant-numeric: tabular-nums; font-weight: 600; width: 52px; text-align: right; }
 
-  /* ── Collapsible GA4 ─────────────────────────────────────── */
   details { border-top: 1px solid var(--border); }
   details summary {
     padding: 10px 16px;
@@ -347,7 +346,6 @@
   <div class="header-right">
     <div>
       <span class="badge badge-live">HubSpot ✅ Live weekly</span>
-      <span class="badge badge-static">GA4 2025 reference</span>
     </div>
     <div class="last-updated">Last updated: <strong>March 12, 2026</strong></div>
   </div>
@@ -427,12 +425,7 @@
       <div class="kpi-value" style="color:var(--green)">55</div>
       <div class="kpi-sub">$309,525 tracked revenue</div>
     </div>
-    <div class="kpi kpi-navy">
-      <div class="kpi-tag tag-live">HubSpot</div>
-      <div class="kpi-label">CRM Contacts</div>
-      <div class="kpi-value" style="color:var(--navy)">31,123</div>
-      <div class="kpi-sub">236 inbound (Slack Agents period)</div>
-    </div>
+
     <div class="kpi kpi-teal">
       <div class="kpi-tag tag-live">HubSpot</div>
       <div class="kpi-label">Active Contacts (7d)</div>
@@ -687,11 +680,88 @@
         <tbody>
           <tr><td class="bold">Active Pipeline Value</td><td class="num bold" style="color:var(--blue)">~$767,000+</td><td class="dim">HubSpot ✅</td></tr>
           <tr><td class="bold">Open Deals</td><td class="num bold">~37</td><td class="dim">HubSpot ✅</td></tr>
-          <tr><td class="bold">Total CRM Contacts</td><td class="num bold">31,123</td><td class="dim">HubSpot ✅</td></tr>
           <tr><td class="bold">Closed-Won (all time)</td><td class="num bold good">55</td><td class="dim">HubSpot ✅</td></tr>
           <tr><td class="bold">Revenue Tracked (8 mo)</td><td class="num bold good">$309,525</td><td class="dim">HubSpot ✅</td></tr>
+          <tr><td class="bold">Closed-Lost (all time)</td><td class="num bold" style="color:#c62828">425</td><td class="dim">HubSpot ✅</td></tr>
         </tbody>
       </table>
+
+      <!-- Closed-Lost Analysis subsection -->
+      <div class="card-hdr hdr-navy" style="margin-top:4px;">Closed-Lost Analysis · Most Recent 200 Deals <small>· HubSpot ✅</small></div>
+      <table>
+        <thead>
+          <tr><th>Loss Category</th><th class="num">Deals</th><th class="num">Share</th><th class="num">Pipeline at Risk</th><th>Marketing Implication</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="bold">No Need / Non-ICP</td>
+            <td class="num">46</td>
+            <td class="num">23%</td>
+            <td class="num">$251K</td>
+            <td class="dim">ICP targeting; better qualification pre-demo</td>
+          </tr>
+          <tr>
+            <td class="bold">Bad Timing (re-engage)</td>
+            <td class="num">38</td>
+            <td class="num">19%</td>
+            <td class="num bold" style="color:#E65100">$657K</td>
+            <td class="dim">Nurture sequences; re-engage pipeline ~38 deals paused</td>
+          </tr>
+          <tr>
+            <td class="bold">Ghosted / Went Dark</td>
+            <td class="num">32</td>
+            <td class="num">16%</td>
+            <td class="num">$239K</td>
+            <td class="dim">Multi-thread earlier; sequence automation post-demo</td>
+          </tr>
+          <tr>
+            <td class="bold">Wrong Decision Maker</td>
+            <td class="num">16</td>
+            <td class="num">8%</td>
+            <td class="num">$74K</td>
+            <td class="dim">Content for Head of Support/CX; avoid Eng-only entry</td>
+          </tr>
+          <tr>
+            <td class="bold">Lost to Competitor</td>
+            <td class="num">14</td>
+            <td class="num">7%</td>
+            <td class="num">$228K</td>
+            <td class="dim">Win/loss battlecards; Intercom &amp; Zendesk displacement plays</td>
+          </tr>
+          <tr>
+            <td class="bold">Budget Constraint</td>
+            <td class="num">13</td>
+            <td class="num">6%</td>
+            <td class="num">$106K</td>
+            <td class="dim">ROI calculator; value-tier framing; trial-first path</td>
+          </tr>
+          <tr>
+            <td class="bold">Use Case Not a Fit</td>
+            <td class="num">9</td>
+            <td class="num">4%</td>
+            <td class="num">$71K</td>
+            <td class="dim">Clearer messaging on what Brainfish does <em>not</em> do</td>
+          </tr>
+          <tr style="border-top:2px solid #1B2A4A;font-weight:700;background:#f5f8ff">
+            <td class="bold">Total (200 analysed)</td>
+            <td class="num bold">200</td>
+            <td class="num bold">100%</td>
+            <td class="num bold" style="color:#c62828">~$1.8M</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Competitor signals -->
+      <div style="padding:12px 16px; background:#fff8f0; border-top:2px solid #E65100; font-size:0.78rem; line-height:1.7;">
+        <strong style="color:#E65100">⚔️ Competitor Signals (in loss reasons):</strong>
+        &nbsp; Build vs Buy / Internal: <strong>24 deals</strong> &nbsp;·&nbsp;
+        Zendesk / Zendesk AI: <strong>11 deals</strong> &nbsp;·&nbsp;
+        Intercom / Fin: <strong>10 deals</strong>
+        <br>
+        <strong style="color:#1B2A4A">Top re-engage opportunity:</strong> 38 "Bad Timing" deals represent <strong>$657K in paused pipeline</strong> — these are warm leads, not lost ones.
+        Zendesk AI is frequently bundled free in existing contracts; Intercom/Fin is an "easy add-on." Displacement messaging and a clear switching ROI story are the #1 competitive gaps.
+      </div>
     </div>
   </div>
 
@@ -699,7 +769,7 @@
   <div class="card card-full" style="margin-bottom:20px;">
     <div class="card-hdr" style="background:linear-gradient(90deg,#1B2A4A 0%,#1565C0 100%); display:flex; justify-content:space-between; align-items:center;">
       <span>⚡ Actionable Insights · Week of Mar 12, 2026</span>
-      <small style="opacity:0.7;">Sources: HubSpot · GA4 · Clarity · Notion · Linear</small>
+      <small style="opacity:0.7;">Sources: HubSpot · Clarity · Notion · Linear</small>
     </div>
     <div class="insight-hdr-strip">
       <h3>The story these tools don't tell individually</h3>
@@ -714,13 +784,13 @@
         <div class="insight-item w">
           <div class="insight-title">Homepage V3 conversion efficiency doubled</div>
           <div class="insight-body">7 form submissions on 40% less traffic post-Feb 24 launch. Dead clicks down -59%, excessive scrolling gone. The new homepage is doing more with less — the UX work is paying off at the bottom of the funnel, not just in vanity metrics.</div>
-          <div class="src-tags"><span class="src src-cl">Clarity</span><span class="src src-ga">GA4</span><span class="src src-nt">Notion</span></div>
+          <div class="src-tags"><span class="src src-cl">Clarity</span><span class="src src-nt">Notion</span></div>
         </div>
 
         <div class="insight-item w">
           <div class="insight-title">Organic Search visitors are your highest-quality leads</div>
-          <div class="insight-body">Search contacts average 71.5 sessions each — nearly 5× Direct (50.2). These are people with intent who keep coming back. Organic Search only drives 12 KEs annually but the contact depth suggests they're in a long research cycle that eventually converts.</div>
-          <div class="src-tags"><span class="src src-hs">HubSpot</span><span class="src src-ga">GA4</span></div>
+          <div class="insight-body">All-time: <strong>74 HubSpot contacts</strong> from Organic Search averaging <strong>6.7 sessions each</strong> — 2.5× higher than Paid Search (1.6) and Paid Social (1.2). These contacts have demonstrated research depth. Organic Search is tied with Direct Traffic for most closed-won deals all time (7 each), generating $57.7K in revenue since Aug 2025. High-engagement channel that actually converts.</div>
+          <div class="src-tags"><span class="src src-hs">HubSpot</span></div>
         </div>
 
         <div class="insight-item w">
@@ -754,21 +824,21 @@
         <div class="insight-col-hdr notwork"><span class="ico">⚠️</span> What's Not Working</div>
 
         <div class="insight-item nw">
-          <div class="insight-title">Paid Social: 2,930 sessions, zero conversions</div>
-          <div class="insight-body">Full year 2025, Paid Social generated 2,930 sessions but 0 key events — the worst KE rate of any channel. This week only 1 active contact came from Paid Social. Continued spend here without a conversion strategy is burning budget. Either add retargeting layers or redirect to channels with demonstrable ROI.</div>
-          <div class="src-tags"><span class="src src-ga">GA4</span><span class="src src-hs">HubSpot</span></div>
+          <div class="insight-title">Paid Social: 126 contacts, 1 closed-won deal all time</div>
+          <div class="insight-body">All-time: <strong>126 HubSpot contacts</strong> from Paid Social, averaging just <strong>1.2 sessions each</strong> — the lowest engagement of any digital channel. Only <strong>1 closed-won deal</strong> ever (BriteBiz, $14,400 in Nov 2025). Contacts from Paid Social rarely return after first touch. Without a retargeting or nurture layer, spend is generating weak leads that don't convert.</div>
+          <div class="src-tags"><span class="src src-hs">HubSpot</span></div>
         </div>
 
         <div class="insight-item nw">
-          <div class="insight-title">Paid Search: 8,691 sessions, only 12 key events (0.14%)</div>
-          <div class="insight-body">High spend channel with the second-worst KE rate. Paid Search visitors engage less (31.5% engagement rate) than Referral or Organic, suggesting the landing pages misalign with ad intent. Keywords may be attracting researchers, not buyers.</div>
-          <div class="src-tags"><span class="src src-ga">GA4</span></div>
+          <div class="insight-title">Paid Search: 241 contacts, 2 closed-won deals — low session depth</div>
+          <div class="insight-body">All-time: <strong>241 HubSpot contacts</strong> from Paid Search averaging just <strong>1.6 sessions each</strong> — suggesting one-and-done visits with low return intent. Only <strong>2 closed-won deals</strong> (Huntress $28,190 + i2i Logic $9,600 = $37,790 total). That's a cost-per-deal that likely exceeds the channel's efficiency threshold. Landing pages may be misaligned with ad intent — visitors aren't being nurtured post-click.</div>
+          <div class="src-tags"><span class="src src-hs">HubSpot</span></div>
         </div>
 
         <div class="insight-item nw">
           <div class="insight-title">Pricing page: 5,974 views, 2 key events (0.03% KE rate)</div>
           <div class="insight-body">The pricing page is your highest commercial-intent page outside /get-a-demo, but almost nobody converts. It's getting 33% more visits w/w (Clarity). These are buyers — they're just not clicking. The CTA placement, pricing model framing, or lack of social proof is killing conversions at the most critical moment.</div>
-          <div class="src-tags"><span class="src src-ga">GA4</span><span class="src src-cl">Clarity</span></div>
+          <div class="src-tags"><span class="src src-cl">Clarity</span></div>
         </div>
 
         <div class="insight-item nw">
@@ -810,7 +880,7 @@
         <div class="insight-item ex">
           <div class="insight-title">Pricing page CTA needs a redesign experiment</div>
           <div class="insight-body">5,974 visits, +33% w/w growth, and only 2 key events. This is the most fixable high-leverage conversion problem on the site. Low-effort test: add a "Talk to sales" secondary CTA alongside the demo form, add 2–3 customer logos near the pricing tiers, and track KE delta over 2 weeks. A/B test with Wynter insights once messaging test results are in.</div>
-          <div class="src-tags"><span class="src src-ga">GA4</span><span class="src src-cl">Clarity</span><span class="src src-nt">Notion</span></div>
+          <div class="src-tags"><span class="src src-cl">Clarity</span><span class="src src-nt">Notion</span></div>
         </div>
 
         <div class="insight-item ex">
@@ -826,6 +896,18 @@
         </div>
 
         <div class="insight-item ex">
+          <div class="insight-title">Build vs Buy is your #1 sales objection — your best ad already addresses it</div>
+          <div class="insight-body">24 of the last 200 closed-lost deals cite internal builds or "build vs buy" framing (DISH, GoTab, Zapier, Paycor, NEOGOV and more). Zendesk AI bundling (11 deals) and Intercom/Fin as easy add-ons (10 deals) are #2 and #3. The "Cost of Building vs. Buying AI Support" doc ad already has 168K impressions at 11.35% CTR — the content resonates, but it's not making it deep into the sales cycle. Turn it into a battlecard, a dedicated landing page, and a mid-funnel email sequence. Competitors win on convenience and existing contracts, not product quality.</div>
+          <div class="src-tags"><span class="src src-hs">HubSpot</span><span class="src src-nt">Notion</span></div>
+        </div>
+
+        <div class="insight-item ex">
+          <div class="insight-title">$657K in "Bad Timing" pipeline needs a nurture sequence now</div>
+          <div class="insight-body">38 closed-lost deals (19%) are categorised as Bad Timing — representing <strong>$657K in paused pipeline</strong>. These aren't lost, they're sleeping. Nearmap ($38K, "rebook in April"), Cartwheel ($16K, "re-engage late April"), Fat Zebra ($36K, "no bandwidth"), Fortiro ($30K, "H2 2026 project"). Without a systematic re-engage sequence, these warm leads will be re-discovered cold by a competitor. Build a 90-day nurture track: value email at 30 days → case study at 60 days → direct re-engage at 90 days.</div>
+          <div class="src-tags"><span class="src src-hs">HubSpot</span></div>
+        </div>
+
+        <div class="insight-item ex">
           <div class="insight-title">ICP audit: lean into &lt;200 FTE wins or fix the funnel for enterprise</div>
           <div class="insight-body">With 0% win rate at Tier 1B (largest), the data suggests either the product-market fit is strongest in growth-stage companies, or enterprise deals are being lost to competitive displacement. Run a closed-won cohort analysis: what's the average FTE, industry, and time-to-close for your 55 wins? Then align messaging, case studies, and ad targeting to match — or fix what's losing enterprise deals.</div>
           <div class="src-tags"><span class="src src-nt">Notion</span><span class="src src-hs">HubSpot</span></div>
@@ -835,57 +917,129 @@
     </div><!-- /insights-grid -->
   </div>
 
-  <!-- ══ GA4 2025 Annual Reference (collapsible) ══════════════════════════ -->
-  <div class="card card-full" style="margin-bottom:20px;">
-    <div class="card-hdr" style="background:#78909C;">
-      GA4 Annual Reference · Full Year 2025
-      <small>· brainfi.sh · Static CSV export · For historical context</small>
+
+
+  <!-- ══ HubSpot Contact Attribution ══════════════════════════════════════ -->
+  <div class="section-wrap" style="margin-top:2rem">
+    <div class="section-hdr">
+      <span>📊 Contact Attribution by Channel · All Time (HubSpot ✅)</span>
     </div>
-    <details>
-      <summary>▸ Show GA4 2025 channel data (static, last exported Mar 2025)</summary>
-      <table>
+    <p style="font-size:0.78rem;color:#555;margin:0.4rem 1rem 1rem;">
+      Based on <strong>1,078 web-sourced HubSpot contacts</strong> (excludes 30,064 offline/imported contacts). 
+      Source = <code>hs_analytics_source</code>. Deals = all-time closed-won attributed to that source channel.
+    </p>
+
+    <div style="overflow-x:auto;margin:0 1rem 1.5rem;">
+      <table class="data-table" style="width:100%;font-size:0.82rem;">
         <thead>
-          <tr><th>Channel</th><th class="num">Sessions</th><th style="min-width:160px">Share</th><th class="num">Engaged</th><th class="ctr">Eng. Rate</th><th class="num">Key Events</th><th class="ctr">KE Rate</th></tr>
+          <tr>
+            <th>Channel</th>
+            <th class="num">Contacts</th>
+            <th class="num">Share</th>
+            <th class="num">Avg Sessions</th>
+            <th class="num">Deals (all-time)</th>
+            <th class="num">Revenue (Aug 25–Mar 26)</th>
+            <th>Signal</th>
+          </tr>
         </thead>
         <tbody>
-          <tr><td class="bold">Direct</td><td class="num">35,804</td><td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:100%;background:var(--blue)"></div></div><div class="bar-val">36.1%</div></div></td><td class="num">10,626</td><td class="ctr">29.7%</td><td class="num star">500</td><td class="ctr">1.40%</td></tr>
-          <tr><td class="bold">Referral</td><td class="num">17,005</td><td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:47.5%;background:var(--teal)"></div></div><div class="bar-val">17.1%</div></div></td><td class="num">9,567</td><td class="ctr good">56.3%</td><td class="num">91</td><td class="ctr">0.53%</td></tr>
-          <tr><td class="bold">Cross-network</td><td class="num">15,787</td><td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:44.1%;background:var(--orange)"></div></div><div class="bar-val">15.9%</div></div></td><td class="num">6,567</td><td class="ctr">41.6%</td><td class="num star">215</td><td class="ctr">1.36%</td></tr>
-          <tr><td class="bold">Organic Search</td><td class="num">12,043</td><td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:33.6%;background:var(--green)"></div></div><div class="bar-val">12.1%</div></div></td><td class="num">6,213</td><td class="ctr good">51.6%</td><td class="num">33</td><td class="ctr">0.27%</td></tr>
-          <tr><td class="bold">Paid Search</td><td class="num">8,691</td><td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:24.3%;background:var(--navy)"></div></div><div class="bar-val">8.7%</div></div></td><td class="num">2,738</td><td class="ctr">31.5%</td><td class="num">12</td><td class="ctr">0.14%</td></tr>
-          <tr><td>Organic Social</td><td class="num">3,168</td><td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:8.8%;background:var(--blue)"></div></div><div class="bar-val">3.2%</div></div></td><td class="num">1,014</td><td class="ctr">32.0%</td><td class="num">9</td><td class="ctr">0.28%</td></tr>
-          <tr><td>Paid Social</td><td class="num">2,930</td><td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:8.2%;background:var(--orange)"></div></div><div class="bar-val">2.9%</div></div></td><td class="num">404</td><td class="ctr" style="color:var(--orange)">13.8%</td><td class="num dim">0</td><td class="ctr">—</td></tr>
-          <tr><td>Email</td><td class="num">2,690</td><td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:7.5%;background:var(--teal)"></div></div><div class="bar-val">2.7%</div></div></td><td class="num">803</td><td class="ctr">29.9%</td><td class="num">12</td><td class="ctr">0.45%</td></tr>
-          <tr class="tr-total"><td class="bold">TOTAL</td><td class="num bold">99,414</td><td></td><td class="num bold">38,794</td><td class="ctr bold">39.0%</td><td class="num bold">899</td><td class="ctr bold">0.90%</td></tr>
+          <tr>
+            <td class="bold">Direct Traffic</td>
+            <td class="num">484</td>
+            <td class="num">44.9%</td>
+            <td class="num">2.7</td>
+            <td class="num bold">7</td>
+            <td class="num">$127,479</td>
+            <td><span style="color:#1A7F3C">✅ High volume, converts</span></td>
+          </tr>
+          <tr>
+            <td class="bold">Paid Search</td>
+            <td class="num">241</td>
+            <td class="num">22.4%</td>
+            <td class="num">1.6</td>
+            <td class="num">2</td>
+            <td class="num">$37,790</td>
+            <td><span style="color:#E65100">⚠️ Low engagement depth</span></td>
+          </tr>
+          <tr>
+            <td class="bold">Paid Social</td>
+            <td class="num">126</td>
+            <td class="num">11.7%</td>
+            <td class="num">1.2</td>
+            <td class="num">1</td>
+            <td class="num">$14,400</td>
+            <td><span style="color:#c62828">🔴 Weakest ROI signal</span></td>
+          </tr>
+          <tr>
+            <td class="bold">Organic Search</td>
+            <td class="num">74</td>
+            <td class="num">6.9%</td>
+            <td class="num bold" style="color:#1A7F3C">6.7</td>
+            <td class="num bold">7</td>
+            <td class="num">$57,700</td>
+            <td><span style="color:#1A7F3C">✅ Highest intent, converts</span></td>
+          </tr>
+          <tr>
+            <td class="bold">Email Marketing</td>
+            <td class="num">64</td>
+            <td class="num">5.9%</td>
+            <td class="num">1.4</td>
+            <td class="num">—</td>
+            <td class="num">—</td>
+            <td><span style="color:#555">ℹ️ No CRM attribution yet</span></td>
+          </tr>
+          <tr>
+            <td class="bold">Other Campaigns</td>
+            <td class="num">51</td>
+            <td class="num">4.7%</td>
+            <td class="num">0.9</td>
+            <td class="num">—</td>
+            <td class="num">—</td>
+            <td><span style="color:#555">ℹ️ Mixed/uncategorised</span></td>
+          </tr>
+          <tr>
+            <td class="bold">Referrals</td>
+            <td class="num">20</td>
+            <td class="num">1.9%</td>
+            <td class="num">2.6</td>
+            <td class="num">—</td>
+            <td class="num">—</td>
+            <td><span style="color:#2E6DB4">🔵 High engagement, small volume</span></td>
+          </tr>
+          <tr>
+            <td class="bold">Organic Social</td>
+            <td class="num">17</td>
+            <td class="num">1.6%</td>
+            <td class="num">1.9</td>
+            <td class="num">—</td>
+            <td class="num">—</td>
+            <td><span style="color:#555">ℹ️ Early stage, growing</span></td>
+          </tr>
+          <tr style="border-top:2px solid #1B2A4A;font-weight:700;background:#f5f8ff">
+            <td class="bold">Total (web-sourced)</td>
+            <td class="num bold">1,078</td>
+            <td class="num bold">100%</td>
+            <td class="num bold">—</td>
+            <td class="num bold">17</td>
+            <td class="num bold">$237,369</td>
+            <td></td>
+          </tr>
         </tbody>
       </table>
-    </details>
-    <details>
-      <summary>▸ Show top pages by views (2025, static)</summary>
-      <table>
-        <thead><tr><th>Page</th><th class="num">Views</th><th class="num">Key Events</th><th class="ctr">KE Rate</th></tr></thead>
-        <tbody>
-          <tr><td class="bold">/</td><td class="num">65,608</td><td class="num">404</td><td class="ctr">0.6%</td></tr>
-          <tr><td class="bold star">/get-a-demo ★</td><td class="num">18,593</td><td class="num star bold">312</td><td class="ctr star">1.7%</td></tr>
-          <tr><td>/pricing</td><td class="num">5,974</td><td class="num dim">2</td><td class="ctr dim">0.0%</td></tr>
-          <tr><td>/company</td><td class="num">2,741</td><td class="num dim">1</td><td class="ctr dim">0.0%</td></tr>
-          <tr><td>/why-brainfish</td><td class="num">2,581</td><td class="num dim">2</td><td class="ctr dim">0.1%</td></tr>
-          <tr><td>/conversational-ai</td><td class="num">2,558</td><td class="num dim">0</td><td class="ctr dim">—</td></tr>
-          <tr><td class="dim">/solutions/automate-knowledge-base-updates</td><td class="num">2,485</td><td class="num dim">1</td><td class="ctr dim">0.0%</td></tr>
-          <tr><td>/customers</td><td class="num">1,724</td><td class="num dim">0</td><td class="ctr dim">—</td></tr>
-          <tr><td class="dim">/blog/we-just-raised-6-4m-usd…</td><td class="num">1,714</td><td class="num dim">0</td><td class="ctr dim">—</td></tr>
-          <tr><td class="bold star">/signup-ty ★</td><td class="num">163</td><td class="num star bold">162</td><td class="ctr star">99.4%</td></tr>
-        </tbody>
-      </table>
-    </details>
+    </div>
+    <p style="font-size:0.73rem;color:#888;margin:0 1rem 0.5rem;">
+      ★ Deal counts include all 55 all-time closed-won. Revenue column shows deals closed Aug 2025–Mar 2026 only (confirmed HubSpot data). 
+      Offline/imported contacts (30,064) and their deals are excluded from this table.
+      Email Marketing and campaign-source deal attribution requires manual CRM tagging review.
+    </p>
   </div>
+
 
 </div><!-- /main -->
 
 <footer>
   <strong>Brainfish Marketing Dashboard</strong> &nbsp;·&nbsp;
   Pipeline, deals, contact traffic &amp; Insights refresh every Monday via HubSpot + Linear &nbsp;·&nbsp;
-  GA4 annual section requires manual CSV export &nbsp;·&nbsp;
   Built with Claude Cowork
 </footer>
 
