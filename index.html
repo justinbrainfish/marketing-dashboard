@@ -1,1047 +1,371 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Brainfish · Marketing Dashboard</title>
-<style>
-  :root {
-    --navy:   #1B2A4A;
-    --blue:   #2E6DB4;
-    --green:  #1A7F3C;
-    --teal:   #006064;
-    --orange: #E65100;
-    --yellow: #FFF8E1;
-    --lgray:  #F4F6F9;
-    --dgray:  #666;
-    --white:  #ffffff;
-    --border: #D0D7E2;
-    --text:   #1a1a2e;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-    font-size: 13px;
-    color: var(--text);
-    background: #EAEFF7;
-  }
-
-  /* ── Header ─────────────────────────────────────────────── */
-  .header {
-    background: var(--navy);
-    color: #fff;
-    padding: 18px 32px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .header-left { display: flex; align-items: center; gap: 16px; }
-  .header-logo {
-    background: var(--blue);
-    color: #fff;
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    padding: 6px 12px;
-    border-radius: 6px;
-  }
-  .header-title { font-size: 20px; font-weight: 700; }
-  .header-sub { font-size: 12px; opacity: 0.65; margin-top: 2px; }
-  .header-right { text-align: right; }
-  .badge {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 600;
-    margin-left: 5px;
-  }
-  .badge-live   { background: #1A7F3C22; color: #1A7F3C; border: 1px solid #1A7F3C55; }
-  .badge-static { background: #E6510022; color: #E65100; border: 1px solid #E6510055; }
-  .last-updated { font-size: 11px; opacity: 0.7; margin-top: 4px; }
-
-  /* ── Layout ──────────────────────────────────────────────── */
-  .main { padding: 24px 32px; max-width: 1400px; margin: 0 auto; }
-  .row { display: flex; gap: 20px; margin-bottom: 20px; }
-  .card {
-    background: #fff;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    overflow: hidden;
-  }
-  .card-full  { flex: 1; }
-  .card-half  { flex: 1; min-width: 0; }
-  .card-hdr {
-    padding: 12px 16px;
-    font-weight: 700;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .hdr-navy   { background: var(--navy); }
-  .hdr-blue   { background: var(--blue); }
-  .hdr-green  { background: var(--green); }
-  .hdr-teal   { background: var(--teal); }
-  .hdr-orange { background: var(--orange); }
-  .card-hdr small { font-weight: 400; font-size: 11px; opacity: 0.75; }
-
-  /* ── Weekly Pulse banner ─────────────────────────────────── */
-  .pulse-banner {
-    background: linear-gradient(135deg, #0D1B35 0%, #1B3A6B 100%);
-    border-radius: 10px;
-    padding: 16px 24px;
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    border: 1px solid #2E6DB4;
-  }
-  .pulse-dot {
-    display: inline-block;
-    width: 9px; height: 9px;
-    border-radius: 50%;
-    background: #4ADE80;
-    box-shadow: 0 0 0 3px #4ADE8033;
-    animation: pulse 2s infinite;
-    margin-right: 7px;
-    flex-shrink: 0;
-  }
-  @keyframes pulse {
-    0%   { box-shadow: 0 0 0 0   #4ADE8055; }
-    70%  { box-shadow: 0 0 0 8px #4ADE8000; }
-    100% { box-shadow: 0 0 0 0   #4ADE8000; }
-  }
-  .pulse-label {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: #4ADE80;
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-  }
-  .pulse-stat { text-align: center; }
-  .pulse-stat .val { font-size: 26px; font-weight: 800; color: #fff; line-height: 1.1; }
-  .pulse-stat .lbl { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 2px; }
-  .pulse-divider { width: 1px; height: 40px; background: rgba(255,255,255,0.15); flex-shrink: 0; }
-  .pulse-channels { flex: 1; min-width: 200px; }
-  .pulse-channels .ch-row {
-    display: flex; align-items: center; gap: 8px; margin-bottom: 5px;
-  }
-  .pulse-channels .ch-row:last-child { margin-bottom: 0; }
-  .ch-label { font-size: 11px; color: rgba(255,255,255,0.7); width: 120px; flex-shrink: 0; }
-  .ch-bar-bg { flex: 1; background: rgba(255,255,255,0.1); border-radius: 3px; height: 7px; }
-  .ch-bar-fill { height: 7px; border-radius: 3px; }
-  .ch-count { font-size: 11px; font-weight: 700; color: #fff; width: 28px; text-align: right; }
-  .pulse-signal {
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 7px;
-    padding: 10px 14px;
-    flex: 1;
-    min-width: 180px;
-  }
-  .pulse-signal .sig-hdr { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #FCD34D; margin-bottom: 6px; }
-  .pulse-signal .sig-item { font-size: 12px; color: rgba(255,255,255,0.8); margin-bottom: 4px; line-height: 1.4; }
-  .pulse-signal .sig-item:last-child { margin-bottom: 0; }
-
-  /* ── KPI Cards ───────────────────────────────────────────── */
-  .kpi-row { display: flex; gap: 16px; margin-bottom: 20px; }
-  .kpi {
-    flex: 1;
-    background: #fff;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    padding: 18px 20px;
-    position: relative;
-  }
-  .kpi-label { font-size: 11px; font-weight: 600; color: var(--dgray); text-transform: uppercase; letter-spacing: 0.5px; }
-  .kpi-value { font-size: 28px; font-weight: 800; line-height: 1.2; margin-top: 4px; }
-  .kpi-sub   { font-size: 11px; color: var(--dgray); margin-top: 4px; }
-  .kpi-tag {
-    position: absolute; top: 14px; right: 14px;
-    font-size: 10px; font-weight: 700;
-    padding: 2px 7px; border-radius: 10px;
-  }
-  .tag-live   { background: #E8F5E9; color: var(--green); }
-  .tag-static { background: #FFF3E0; color: var(--orange); }
-  .kpi-accent { border-top: 3px solid var(--blue); }
-  .kpi-green  { border-top: 3px solid var(--green); }
-  .kpi-navy   { border-top: 3px solid var(--navy); }
-  .kpi-orange { border-top: 3px solid var(--orange); }
-  .kpi-teal   { border-top: 3px solid var(--teal); }
-
-  /* ── Tables ──────────────────────────────────────────────── */
-  table { width: 100%; border-collapse: collapse; }
-  th {
-    background: var(--lgray);
-    padding: 9px 12px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    color: var(--navy);
-    text-align: left;
-    border-bottom: 2px solid var(--border);
-    white-space: nowrap;
-  }
-  td {
-    padding: 8px 12px;
-    font-size: 12.5px;
-    border-bottom: 1px solid #EDF0F5;
-    vertical-align: middle;
-  }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: #F8FAFD; }
-  .tr-total td { background: var(--navy) !important; color: #fff !important; font-weight: 700; }
-
-  .num  { text-align: right; font-variant-numeric: tabular-nums; }
-  .ctr  { text-align: center; }
-  .bold { font-weight: 700; }
-  .dim  { color: var(--dgray); font-size: 11.5px; }
-  .star { color: var(--orange); font-weight: 700; }
-  .good { color: var(--green); font-weight: 700; }
-  .pill {
-    display: inline-block;
-    padding: 2px 8px; border-radius: 10px;
-    font-size: 11px; font-weight: 600;
-    white-space: nowrap;
-  }
-  .pill-green  { background: #E8F5E9; color: var(--green); }
-  .pill-blue   { background: #E3F2FD; color: var(--blue); }
-  .pill-navy   { background: #E8ECF4; color: var(--navy); }
-  .pill-orange { background: #FFF3E0; color: var(--orange); }
-
-  /* ── Bar cells ───────────────────────────────────────────── */
-  .bar-wrap { display: flex; align-items: center; gap: 8px; }
-  .bar-bg   { flex: 1; background: #E9EDF4; border-radius: 4px; height: 8px; overflow: hidden; }
-  .bar-fill { height: 8px; border-radius: 4px; }
-  .bar-val  { font-size: 12px; font-variant-numeric: tabular-nums; font-weight: 600; width: 52px; text-align: right; }
-
-  details { border-top: 1px solid var(--border); }
-  details summary {
-    padding: 10px 16px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--dgray);
-    cursor: pointer;
-    user-select: none;
-    background: var(--lgray);
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  details summary::before { content: '▶'; font-size: 9px; transition: transform 0.2s; }
-  details[open] summary::before { transform: rotate(90deg); }
-
-  /* ── Persona card ─────────────────────────────────────────── */
-  .period { font-weight: 700; font-size: 12px; }
-  .period-sa  { color: var(--blue); }
-  .period-vu  { color: var(--green); }
-  .period-kd  { color: var(--teal); }
-  .period-mst { color: var(--orange); }
-
-  /* ── Footer ──────────────────────────────────────────────── */
-  footer {
-    background: var(--navy);
-    color: rgba(255,255,255,0.5);
-    text-align: center;
-    padding: 14px;
-    font-size: 11px;
-    margin-top: 4px;
-  }
-  footer strong { color: rgba(255,255,255,0.8); }
-
-  /* ── Insights Section ────────────────────────────────────── */
-  .insights-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 0;
-  }
-  .insight-col {
-    padding: 16px 18px;
-    border-right: 1px solid var(--border);
-  }
-  .insight-col:last-child { border-right: none; }
-  .insight-col-hdr {
-    font-size: 11px; font-weight: 800; text-transform: uppercase;
-    letter-spacing: 0.7px; margin-bottom: 12px;
-    display: flex; align-items: center; gap: 7px;
-  }
-  .insight-col-hdr .ico { font-size: 16px; }
-  .insight-col-hdr.working  { color: #1A7F3C; }
-  .insight-col-hdr.notwork  { color: #C62828; }
-  .insight-col-hdr.explore  { color: #1565C0; }
-  .insight-item {
-    background: var(--lgray);
-    border-radius: 7px;
-    padding: 10px 12px;
-    margin-bottom: 8px;
-    border-left: 3px solid transparent;
-  }
-  .insight-item:last-child { margin-bottom: 0; }
-  .insight-item.w  { border-left-color: #1A7F3C; }
-  .insight-item.nw { border-left-color: #C62828; background: #FFF5F5; }
-  .insight-item.ex { border-left-color: #1565C0; background: #F0F7FF; }
-  .insight-title {
-    font-size: 12px; font-weight: 700; color: var(--text);
-    margin-bottom: 3px; line-height: 1.35;
-  }
-  .insight-body {
-    font-size: 11.5px; color: #444; line-height: 1.5;
-    margin-bottom: 5px;
-  }
-  .src-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
-  .src {
-    display: inline-block; padding: 1px 6px; border-radius: 9px;
-    font-size: 10px; font-weight: 700; letter-spacing: 0.2px;
-  }
-  .src-hs   { background: #FFF3E0; color: #E65100; }
-  .src-ga   { background: #FFF8E1; color: #F57F17; }
-  .src-cl   { background: #E3F2FD; color: #0D47A1; }
-  .src-nt   { background: #E8F5E9; color: #1B5E20; }
-  .src-ln   { background: #EDE7F6; color: #4527A0; }
-  .src-li   { background: #E1F5FE; color: #01579B; }
-  .insight-hdr-strip {
-    padding: 12px 18px 0;
-    display: flex; justify-content: space-between; align-items: baseline;
-  }
-  .insight-hdr-strip h3 {
-    font-size: 13px; font-weight: 800; color: var(--navy);
-    text-transform: uppercase; letter-spacing: 0.5px;
-  }
-  .insight-hdr-strip .ins-sub { font-size: 11px; color: var(--dgray); }
-
-  @media (max-width: 900px) {
-    .row { flex-direction: column; }
-    .kpi-row { flex-wrap: wrap; }
-    .kpi { min-width: 45%; }
-    .pulse-banner { flex-direction: column; gap: 16px; }
-    .insights-grid { grid-template-columns: 1fr; }
-    .insight-col { border-right: none; border-bottom: 1px solid var(--border); }
-    .insight-col:last-child { border-bottom: none; }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brainfish Weekly Marketing Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1B2A4A 0%, #2E6DB4 100%);
+            padding: 24px;
+            min-height: 100vh;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header h1 { font-size: 28px; color: #1B2A4A; margin-bottom: 6px; }
+        .header p { color: #888; font-size: 13px; }
+        .pulse-banner {
+            background: linear-gradient(135deg, #1B2A4A 0%, #2E6DB4 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+        .pulse-item { text-align: center; }
+        .pulse-item .label { font-size: 11px; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .pulse-item .value { font-size: 26px; font-weight: bold; }
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .kpi-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .kpi-card h3 { font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+        .kpi-card .value { font-size: 30px; font-weight: bold; color: #1B2A4A; margin-bottom: 4px; }
+        .kpi-card .subtext { font-size: 12px; color: #aaa; }
+        .section {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .section h2 { font-size: 17px; color: #1B2A4A; margin-bottom: 18px; border-bottom: 2px solid #D6E8F8; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+        th { background: #f5f7fb; padding: 10px 12px; text-align: left; font-weight: 600; color: #444; border-bottom: 2px solid #e0e6f0; font-size: 12px; }
+        td { padding: 10px 12px; border-bottom: 1px solid #eef0f5; color: #555; font-size: 13px; }
+        tr:last-child td { border-bottom: none; }
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 4px;
+        }
+        @media (max-width: 900px) { .insights-grid { grid-template-columns: 1fr; } }
+        .insight-col { display: flex; flex-direction: column; gap: 14px; }
+        .insight-col-header {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid;
+            margin-bottom: 2px;
+        }
+        .insight-col.working .insight-col-header { color: #1A7F3C; border-color: #1A7F3C; }
+        .insight-col.notworking .insight-col-header { color: #E65100; border-color: #E65100; }
+        .insight-col.investigate .insight-col-header { color: #2E6DB4; border-color: #2E6DB4; }
+        .insight-card {
+            background: #f9fafb;
+            border-left: 3px solid;
+            padding: 14px;
+            border-radius: 4px;
+        }
+        .insight-col.working .insight-card { border-left-color: #1A7F3C; }
+        .insight-col.notworking .insight-card { border-left-color: #E65100; }
+        .insight-col.investigate .insight-card { border-left-color: #2E6DB4; }
+        .insight-card h4 { font-size: 13px; font-weight: 600; color: #1a1a1a; margin-bottom: 6px; line-height: 1.4; }
+        .insight-card p { font-size: 12px; line-height: 1.6; color: #666; }
+        .source-tag {
+            display: inline-block;
+            background: #e8eef7;
+            color: #2E6DB4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            margin-top: 8px;
+            margin-right: 4px;
+        }
+        .footer {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 12px;
+            color: #aaa;
+        }
+        .star { color: #ff9800; }
+        .badge-done { color: #1A7F3C; font-weight: 600; }
+        .badge-progress { color: #E65100; font-weight: 600; }
+    </style>
 </head>
 <body>
+<div class="container">
 
-<!-- ═══ HEADER ═════════════════════════════════════════════════════════════ -->
-<div class="header">
-  <div class="header-left">
-    <div class="header-logo">bf</div>
-    <div>
-      <div class="header-title">Brainfish · Marketing Dashboard</div>
-      <div class="header-sub">Launch Performance · Pipeline · Live Contact Traffic</div>
+    <!-- HEADER -->
+    <div class="header">
+        <h1>📊 Brainfish Weekly Marketing Dashboard</h1>
+        <p>Updated Mar 20, 2026 &nbsp;•&nbsp; Week of Mar 13–20</p>
     </div>
-  </div>
-  <div class="header-right">
-    <div>
-      <span class="badge badge-live">HubSpot ✅ Live weekly</span>
+
+    <!-- PULSE BANNER -->
+    <div class="pulse-banner">
+        <div class="pulse-item">
+            <div class="label">Weekly Contacts</div>
+            <div class="value">14</div>
+        </div>
+        <div class="pulse-item">
+            <div class="label">Sessions (7d)</div>
+            <div class="value">177</div>
+        </div>
+        <div class="pulse-item">
+            <div class="label">Top Channel</div>
+            <div class="value">Organic</div>
+        </div>
+        <div class="pulse-item">
+            <div class="label">Top Entry</div>
+            <div class="value">Webinar</div>
+        </div>
+        <div class="pulse-item">
+            <div class="label">Active Pipeline</div>
+            <div class="value">$1.29M</div>
+        </div>
+        <div class="pulse-item">
+            <div class="label">Open Deals</div>
+            <div class="value">57</div>
+        </div>
     </div>
-    <div class="last-updated">Last updated: <strong>March 12, 2026</strong></div>
-  </div>
+
+    <!-- KPI CARDS -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <h3>Active Pipeline</h3>
+            <div class="value">$1,293,644</div>
+            <div class="subtext">57 open deals</div>
+        </div>
+        <div class="kpi-card">
+            <h3>Closed Revenue (Tracked)</h3>
+            <div class="value">$309,525</div>
+            <div class="subtext">16 confirmed deals · Aug 2025–Mar 2026</div>
+        </div>
+        <div class="kpi-card">
+            <h3>Recent Closed-Won (30d)</h3>
+            <div class="value">$86,800</div>
+            <div class="subtext">Fat Zebra $39.3K · InfoTrack $35K · Pave $12.5K</div>
+        </div>
+    </div>
+
+    <!-- PIPELINE SECTION -->
+    <div class="section">
+        <h2>💰 Pipeline & Recent Conversions</h2>
+        <table>
+            <thead>
+                <tr><th>Deal</th><th>Amount</th><th>Close Date</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Fat Zebra — New Deal</td><td>$39,300</td><td>Mar 19, 2026</td></tr>
+                <tr><td>InfoTrack AU — New Subscription Agreement</td><td>$35,000</td><td>Mar 11, 2026</td></tr>
+                <tr><td>Pave — New Deal</td><td>$12,500</td><td>Mar 18, 2026</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- CHANNEL TRAFFIC -->
+    <div class="section">
+        <h2>🔗 Channel Weekly Pulse — Mar 13–20</h2>
+        <table>
+            <thead>
+                <tr><th>Channel</th><th>Unique Contacts</th><th>Sessions</th><th>Page Views</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Organic Search</td><td>3</td><td>122</td><td>541</td></tr>
+                <tr><td>Social Media</td><td>5</td><td>8</td><td>14</td></tr>
+                <tr><td>Direct Traffic</td><td>4</td><td>7</td><td>9</td></tr>
+                <tr><td>Paid Search</td><td>1</td><td>56</td><td>133</td></tr>
+            </tbody>
+        </table>
+        <p style="margin-top:12px; color:#aaa; font-size:12px;"><span class="star">★</span> Top landing pages: webinars/modern-enablement-engine, webinars/hallucinations-certainty, homepage. Source: HubSpot hs_analytics.</p>
+    </div>
+
+    <!-- ENGINEERING COMPLETIONS -->
+    <div class="section">
+        <h2>🛠️ Engineering Completions — Last 7 Days</h2>
+        <table>
+            <thead>
+                <tr><th>Issue</th><th>Project</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Teams OAuth – Full Connect flow (OAuth-first UX)</td><td>Microsoft Teams Integration</td></tr>
+                <tr><td>Teams Graph API – List teams, fetch channels, send to channel, install bot</td><td>Microsoft Teams Integration</td></tr>
+                <tr><td>Teams – Token refresh + fallback (bot vs Graph)</td><td>Microsoft Teams Integration</td></tr>
+                <tr><td>Teams – Observability metrics added (Datadog)</td><td>Microsoft Teams Integration</td></tr>
+                <tr><td>Front integration – Create ticket + attach transcript (both parts)</td><td>Conversation Transcript Handoff</td></tr>
+                <tr><td>Dedicated S3 bucket for conversation image uploads</td><td>Image Upload as Context</td></tr>
+                <tr><td>Knowledge Layout fixes (nudge, settings scroll, z-index, article history cards, account dropdown)</td><td>Knowledge Layout fixes</td></tr>
+                <tr><td>Sort Help Center collections from knowledge source screen</td><td>Knowledge structure re-design</td></tr>
+                <tr><td>Salesforce Email Agent – Scope complete</td><td>Integrations</td></tr>
+                <tr><td>Claude 4.5 Sonnet / Opus model support added</td><td>Answer Service</td></tr>
+                <tr><td>Evaluation pipeline – Unified scoring + multimodal support</td><td>Answer Evals</td></tr>
+                <tr><td>fix: multipart/form-data encoding + AI re-asking bug</td><td>Distribution</td></tr>
+                <tr><td>Notion database 504 error fix</td><td>Integrations</td></tr>
+                <tr><td>Vertex AI set to global + HTTP priority headers</td><td>Distribution</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- MARKETING COMPLETIONS -->
+    <div class="section">
+        <h2>📢 Marketing Completions — Last 7 Days</h2>
+        <table>
+            <thead>
+                <tr><th>Deliverable</th><th>Type</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>2× ad strength fixed: Poor → Average (Brand Variants + Brand + Intent)</td><td>Ad Optimisation</td></tr>
+                <tr><td>Google Ads conversion tag live in GTM (demo form)</td><td>Conversion Tracking</td></tr>
+                <tr><td>Email Invite 2 – "Old vs New Enablement Model" webinar</td><td>Email</td></tr>
+                <tr><td>Post 1 – RAG Accuracy Degradation in Production (2,500–3,000w, High priority)</td><td>Long-form Blog</td></tr>
+                <tr><td>Demo March 2026 ad set created → /get-a-demo</td><td>Paid Search</td></tr>
+                <tr><td>Launch – Image Upload (full GTM: changelog, help docs, GIFs, customer Slack comms)</td><td>Product Launch</td></tr>
+                <tr><td>Google Ads daily performance report → Notion (automated, 8am)</td><td>Reporting Automation</td></tr>
+                <tr><td>Wynter Homepage Messaging Test launched (results due Mar 24)</td><td>Research / Testing</td></tr>
+                <tr><td>YouTube Short – Clip 1 from Hallucinations Webinar (published)</td><td>Social Video</td></tr>
+                <tr><td>About Us page updated</td><td>Website</td></tr>
+                <tr><td>Why Brainfish page updated</td><td>Website / Positioning</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ACTIVE MARKETING WORK -->
+    <div class="section">
+        <h2>⏳ In Progress</h2>
+        <table>
+            <thead>
+                <tr><th>Launch / Task</th><th>Due</th><th>Remaining</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>UI Refresh Launch (MKT-167)</td><td>Mar 24</td><td>GIFs, messaging doc, changelog, announcement email, customer Slack</td></tr>
+                <tr><td>MS Teams Launch (ships Mar 30)</td><td>Mar 30</td><td>Full GTM: no MKT launch ticket yet visible</td></tr>
+                <tr><td>Knowledge Review Launch (MKT-175)</td><td>Mar 31</td><td>Messaging doc, changelog, customer comms</td></tr>
+                <tr><td>Conversion Tracking Audit (MKT-216)</td><td>–</td><td>Phone field removal from /get-a-demo</td></tr>
+                <tr><td>Team Enablement Campaign Imagery (MKT-132)</td><td>⚠️ Feb 25 (overdue)</td><td>Design assets for Slack Agents + Brainfish Assist</td></tr>
+                <tr><td>Schema update for all pages (MKT-48, High)</td><td>–</td><td>SEO schema markup across site</td></tr>
+                <tr><td>CS Persona Landing Page for LinkedIn Ads (MKT-70)</td><td>–</td><td>Copy and build</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ACTIONABLE INSIGHTS -->
+    <div class="section">
+        <h2>💡 Actionable Insights</h2>
+        <div class="insights-grid">
+
+            <!-- WHAT'S WORKING -->
+            <div class="insight-col working">
+                <div class="insight-col-header">✅ What's Working</div>
+
+                <div class="insight-card">
+                    <h4>Image Upload shipped with tight GTM alignment</h4>
+                    <p>Engineering completed the S3 infrastructure (BF-3726) and MKT turned around changelog, help docs, GIFs, and customer Slack comms in the same week (MKT-186, all sub-tasks Done Mar 20). This is the cleanest eng-to-marketing handoff of the last 5 launches.</p>
+                    <span class="source-tag">Linear</span>
+                </div>
+
+                <div class="insight-card">
+                    <h4>Webinar + blog content driving organic sessions</h4>
+                    <p>Organic search delivered 122 sessions / 541 pageviews in 7 days with only 3 known CRM contacts — suggesting reach beyond the existing database. Webinar landing pages are the top entry points; the RAG accuracy blog (High priority, published Mar 20) adds a second SEO asset this week.</p>
+                    <span class="source-tag">HubSpot</span><span class="source-tag">Linear</span>
+                </div>
+
+                <div class="insight-card">
+                    <h4>Why Brainfish + About Us page positioning refresh done</h4>
+                    <p>MKT-39 (Why Brainfish) and MKT-56 (About Us) marked Done this week, both under the MKT-34 "Knowledge Intelligence" messaging umbrella. These are foundational pages that support every downstream channel. Product Pages and Pricing still in progress.</p>
+                    <span class="source-tag">Linear</span>
+                </div>
+
+                <div class="insight-card">
+                    <h4>Paid Search measurement infrastructure now in place</h4>
+                    <p>Conversion tag deployed in GTM (MKT-213, Version 21 published), Demo March 2026 ad set live pointing to /get-a-demo, and both brand ad strengths lifted from Poor → Average. The full tracking loop is ready to measure once form friction is resolved.</p>
+                    <span class="source-tag">Linear</span>
+                </div>
+            </div>
+
+            <!-- WHAT'S NOT WORKING -->
+            <div class="insight-col notworking">
+                <div class="insight-col-header">⚠️ What's Not Working</div>
+
+                <div class="insight-card">
+                    <h4>Demo form phone field blocking paid conversions</h4>
+                    <p>Brand - Search brand campaign: 30+ clicks, 40%+ CTR, 0 conversions. MKT-216 audit confirmed required phone number on /get-a-demo is the primary friction point — B2B SaaS data shows making phone optional increases form completions 25–40%. Fix is known and tracked; hasn't shipped yet.</p>
+                    <span class="source-tag">Linear</span><span class="source-tag">HubSpot</span>
+                </div>
+
+                <div class="insight-card">
+                    <h4>Team Enablement campaign imagery is 3+ weeks overdue</h4>
+                    <p>MKT-132 (design assets for Slack Agents + Brainfish Assist "Team Enablement" campaign) was due Feb 25 and is still In Progress. This is now blocking visual assets across multiple active launches. Worth escalating or scoping down the deliverable to unblock.</p>
+                    <span class="source-tag">Linear</span>
+                </div>
+
+                <div class="insight-card">
+                    <h4>3 launches queued in the next 10 days with overlapping GTM work</h4>
+                    <p>UI Refresh (Mar 24), Teams (Mar 30), and Knowledge Review (Mar 31) are all in progress simultaneously. UI Refresh still needs GIFs, messaging, changelog, email, and customer comms — 4 days out. If sequencing isn't tightened, all three risk launching without full GTM coverage.</p>
+                    <span class="source-tag">Linear</span>
+                </div>
+            </div>
+
+            <!-- INVESTIGATE & REINVEST -->
+            <div class="insight-col investigate">
+                <div class="insight-col-header">🔍 Investigate & Reinvest</div>
+
+                <div class="insight-card">
+                    <h4>Claude 4.5 model upgrade shipped — no MKT ticket yet</h4>
+                    <p>BF-3402 (Add Claude 4.5 Sonnet / Opus model support) marked Done. This is a directly marketable accuracy and quality upgrade, especially given the RAG accuracy blog post and the Hallucinations webinar positioning around answer quality. No MKT issue visible for a changelog or announcement.</p>
+                    <span class="source-tag">Linear</span>
+                </div>
+
+                <div class="insight-card">
+                    <h4>Front integration (ticket handoff + transcript) shipped — no MKT ticket</h4>
+                    <p>BF-3593/3594/3595: Full Front integration complete — creates tickets, attaches conversation transcripts. Built for Coassemble but positioning as "support handoff with context" is a broadly marketable capability. No MKT launch or changelog ticket visible.</p>
+                    <span class="source-tag">Linear</span>
+                </div>
+
+                <div class="insight-card">
+                    <h4>Wynter results due Mar 24 — feed into Teams launch messaging</h4>
+                    <p>Wynter homepage messaging test launched (MKT-191). Results expected in 4 days. These findings should directly inform the Teams launch narrative and the MKT-34 website messaging refresh still in progress. Worth scheduling a review of results before Teams GTM is finalised.</p>
+                    <span class="source-tag">Linear</span>
+                </div>
+
+                <div class="insight-card">
+                    <h4>Salesforce Email Agent scoped — plan the go-to-market now</h4>
+                    <p>BF-3711 (Salesforce Email Agent scope) marked Done. Salesforce is a strong enterprise buyer signal and a natural expansion play for existing customers using Salesforce. No MKT launch ticket visible yet — worth creating one while the engineering context is fresh.</p>
+                    <span class="source-tag">Linear</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Dashboard refreshed Mar 20, 2026 &nbsp;·&nbsp; Tracked revenue: $309,525 / 16 confirmed deals (Aug 2025–Mar 2026) &nbsp;·&nbsp; Pipeline: $1.29M / 57 open deals &nbsp;·&nbsp; Clarity unavailable this run (UX metrics marked ★ where applicable)</p>
+        <p style="margin-top:6px;">Upload to github.com/justinbrainfish/brainfish-dashboard to publish</p>
+    </div>
+
 </div>
-
-<div class="main">
-
-  <!-- ══ WEEKLY PULSE (Live, HubSpot) ════════════════════════════════════ -->
-  <div class="pulse-banner">
-    <div class="pulse-label">
-      <span class="pulse-dot"></span>This Week · Mar 5–12
-    </div>
-    <div class="pulse-divider"></div>
-    <div class="pulse-stat">
-      <div class="val">23</div>
-      <div class="lbl">Active contacts</div>
-    </div>
-    <div class="pulse-divider"></div>
-    <div class="pulse-stat">
-      <div class="val">1,003</div>
-      <div class="lbl">Sessions</div>
-    </div>
-    <div class="pulse-divider"></div>
-    <div class="pulse-stat">
-      <div class="val">2,817</div>
-      <div class="lbl">Page views</div>
-    </div>
-    <div class="pulse-divider"></div>
-    <!-- Channel mini-bars (max = 13 direct) -->
-    <div class="pulse-channels">
-      <div class="ch-row">
-        <div class="ch-label">Direct</div>
-        <div class="ch-bar-bg"><div class="ch-bar-fill" style="width:100%;background:#2E6DB4"></div></div>
-        <div class="ch-count">13</div>
-      </div>
-      <div class="ch-row">
-        <div class="ch-label">Organic Search</div>
-        <div class="ch-bar-bg"><div class="ch-bar-fill" style="width:31%;background:#1A7F3C"></div></div>
-        <div class="ch-count">4</div>
-      </div>
-      <div class="ch-row">
-        <div class="ch-label">Social Media</div>
-        <div class="ch-bar-bg"><div class="ch-bar-fill" style="width:23%;background:#E65100"></div></div>
-        <div class="ch-count">3</div>
-      </div>
-      <div class="ch-row">
-        <div class="ch-label">Paid Search</div>
-        <div class="ch-bar-bg"><div class="ch-bar-fill" style="width:8%;background:#006064"></div></div>
-        <div class="ch-count">1</div>
-      </div>
-      <div class="ch-row">
-        <div class="ch-label">Email / Paid Social</div>
-        <div class="ch-bar-bg"><div class="ch-bar-fill" style="width:8%;background:#9C27B0"></div></div>
-        <div class="ch-count">2</div>
-      </div>
-    </div>
-    <div class="pulse-divider"></div>
-    <div class="pulse-signal">
-      <div class="sig-hdr">📡 Signals this week</div>
-      <div class="sig-item">🎙 Webinar "Modern Enablement Engine" → 3 LinkedIn contacts today</div>
-      <div class="sig-item">🔍 Organic Search contact: 117 sessions, 457 pageviews (high intent)</div>
-      <div class="sig-item">💡 reasondb.ai domain activity — internal testing detected</div>
-    </div>
-  </div>
-
-  <!-- ══ KPI STRIP ═══════════════════════════════════════════════════════ -->
-  <div class="kpi-row">
-    <div class="kpi kpi-accent">
-      <div class="kpi-tag tag-live">HubSpot</div>
-      <div class="kpi-label">Active Pipeline</div>
-      <div class="kpi-value" style="color:var(--blue)">$767K+</div>
-      <div class="kpi-sub">~37 open deals</div>
-    </div>
-    <div class="kpi kpi-green">
-      <div class="kpi-tag tag-live">HubSpot</div>
-      <div class="kpi-label">Closed-Won (All Time)</div>
-      <div class="kpi-value" style="color:var(--green)">55</div>
-      <div class="kpi-sub">$309,525 tracked revenue</div>
-    </div>
-
-    <div class="kpi kpi-teal">
-      <div class="kpi-tag tag-live">HubSpot</div>
-      <div class="kpi-label">Active Contacts (7d)</div>
-      <div class="kpi-value" style="color:var(--teal)">23</div>
-      <div class="kpi-sub">1,003 sessions · 2,817 pageviews</div>
-    </div>
-    <div class="kpi kpi-orange">
-      <div class="kpi-tag tag-live">HubSpot</div>
-      <div class="kpi-label">Top Conversion Page</div>
-      <div class="kpi-value" style="color:var(--orange)">312</div>
-      <div class="kpi-sub">/get-a-demo KEs · 1.7% rate (2025)</div>
-    </div>
-  </div>
-
-  <!-- ══ ROW 1: Funnel + Revenue ══════════════════════════════════════════ -->
-  <div class="row">
-    <div class="card card-half">
-      <div class="card-hdr hdr-navy">
-        Contact Funnel by Launch Period
-        <small>· HubSpot · Inbound only (excl. OFFLINE/Segment)</small>
-      </div>
-      <table>
-        <thead>
-          <tr><th>Period</th><th>Date Range</th><th class="num">Contacts</th><th>Status</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="period period-mst">MS Teams</span></td>
-            <td class="dim">Mar 12 – Apr 30, 2026</td>
-            <td class="num bold">9</td>
-            <td><span class="pill pill-orange">🟡 Pre-launch</span></td>
-          </tr>
-          <tr>
-            <td><span class="period period-sa">Slack Agents</span></td>
-            <td class="dim">Feb 12 – Mar 11, 2026</td>
-            <td class="num bold" style="color:var(--blue)">236</td>
-            <td><span class="pill pill-blue">🟢 Live</span></td>
-          </tr>
-          <tr>
-            <td><span class="period period-kd">Knowledge Discovery</span></td>
-            <td class="dim">Nov 12, 2025 – Jan 11, 2026</td>
-            <td class="num bold">43</td>
-            <td><span class="pill pill-navy">✅ Complete</span></td>
-          </tr>
-          <tr>
-            <td><span class="period period-vu">Video Upload</span></td>
-            <td class="dim">Aug 21 – Oct 20, 2025</td>
-            <td class="num bold">195</td>
-            <td><span class="pill pill-navy">✅ Complete</span></td>
-          </tr>
-        </tbody>
-      </table>
-      <div style="padding:10px 14px; background:var(--lgray); font-size:11px; color:var(--dgray); border-top:1px solid var(--border);">
-        ⚠ OFFLINE contacts (Twilio Segment / PLG syncs) excluded from all counts.
-      </div>
-    </div>
-
-    <div class="card card-half">
-      <div class="card-hdr hdr-green">
-        Closed-Won by Launch Period
-        <small>· HubSpot · Launch-period deals</small>
-      </div>
-      <table>
-        <thead>
-          <tr><th>Period</th><th class="num">Deals</th><th class="num">Revenue (AUD)</th><th>Key Signal</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="period period-sa">Slack Agents</span></td>
-            <td class="num bold">3</td>
-            <td class="num bold" style="color:var(--green)">$57,250</td>
-            <td class="dim">InfoTrack $35K (regulatory driver)</td>
-          </tr>
-          <tr>
-            <td><span class="period period-kd">Knowledge Discovery</span></td>
-            <td class="num bold">6</td>
-            <td class="num bold" style="color:var(--green)">$129,775</td>
-            <td class="dim">Strongest close rate (3–9 mo pipelines)</td>
-          </tr>
-          <tr>
-            <td><span class="period period-vu">Video Upload</span></td>
-            <td class="num bold">4</td>
-            <td class="num bold" style="color:var(--green)">$122,500</td>
-            <td class="dim">Video Upload cited in every deal</td>
-          </tr>
-          <tr>
-            <td class="dim">Pre-launch / Unassigned</td>
-            <td class="num">42</td>
-            <td class="num dim">—</td>
-            <td class="dim">Full history in HubSpot</td>
-          </tr>
-          <tr class="tr-total">
-            <td class="bold">TOTAL (all time)</td>
-            <td class="num bold">55</td>
-            <td class="num bold">$309,525+</td>
-            <td>8 months tracked</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- ══ ROW 2: Weekly Active Contacts (full) ═════════════════════════════ -->
-  <div class="row">
-    <div class="card card-full">
-      <div class="card-hdr hdr-blue">
-        Weekly Active Known Contacts — Channel Breakdown
-        <small>· Last 7 days · hs_analytics_last_visit_timestamp · HubSpot ✅ Live</small>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Channel (HubSpot Source)</th>
-            <th class="num">Contacts</th>
-            <th style="min-width:180px">Contact share</th>
-            <th class="num">Sessions (cumulative)</th>
-            <th class="num">Pageviews (cumulative)</th>
-            <th>Avg sessions / contact</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="bold">Direct Traffic</td>
-            <td class="num bold">13</td>
-            <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:100%;background:var(--blue)"></div></div><div class="bar-val">56.5%</div></div></td>
-            <td class="num">653</td>
-            <td class="num">1,901</td>
-            <td class="dim ctr">50.2 avg</td>
-          </tr>
-          <tr>
-            <td class="bold">Organic Search</td>
-            <td class="num bold">4</td>
-            <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:30.8%;background:var(--green)"></div></div><div class="bar-val">17.4%</div></div></td>
-            <td class="num star bold">286</td>
-            <td class="num star bold">773</td>
-            <td class="ctr good">71.5 avg ★</td>
-          </tr>
-          <tr>
-            <td class="bold">Social Media</td>
-            <td class="num bold">3</td>
-            <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:23.1%;background:var(--orange)"></div></div><div class="bar-val">13.0%</div></div></td>
-            <td class="num">5</td>
-            <td class="num">5</td>
-            <td class="dim ctr">1.7 avg</td>
-          </tr>
-          <tr>
-            <td class="bold">Paid Search</td>
-            <td class="num bold">1</td>
-            <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:7.7%;background:var(--teal)"></div></div><div class="bar-val">4.3%</div></div></td>
-            <td class="num">52</td>
-            <td class="num">129</td>
-            <td class="dim ctr">52.0 avg</td>
-          </tr>
-          <tr>
-            <td>Email Marketing</td>
-            <td class="num">1</td>
-            <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:7.7%;background:#9C27B0"></div></div><div class="bar-val">4.3%</div></div></td>
-            <td class="num">2</td>
-            <td class="num">2</td>
-            <td class="dim ctr">2.0 avg</td>
-          </tr>
-          <tr>
-            <td>Paid Social</td>
-            <td class="num">1</td>
-            <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:7.7%;background:#E91E63"></div></div><div class="bar-val">4.3%</div></div></td>
-            <td class="num">5</td>
-            <td class="num">7</td>
-            <td class="dim ctr">5.0 avg</td>
-          </tr>
-          <tr class="tr-total">
-            <td class="bold">TOTAL (known contacts)</td>
-            <td class="num bold">23</td>
-            <td></td>
-            <td class="num bold">1,003</td>
-            <td class="num bold">2,817</td>
-            <td class="ctr">43.6 avg</td>
-          </tr>
-        </tbody>
-      </table>
-      <div style="padding:10px 16px; background:var(--lgray); font-size:11px; color:var(--dgray); border-top:1px solid var(--border);">
-        ℹ These are <strong>identified contacts</strong> in HubSpot whose last visit was within the past 7 days. Anonymous sessions not included. Organic Search contacts have the highest engagement rate (71.5 sessions avg) — strong purchase intent signal.
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ ROW 3: Top Pages + Personas ══════════════════════════════════════ -->
-  <div class="row">
-    <div class="card card-half">
-      <div class="card-hdr hdr-teal">
-        Top Entry Pages · Identified Contacts (All Time)
-        <small>· hs_analytics_first_url · HubSpot ✅</small>
-      </div>
-      <table>
-        <thead>
-          <tr><th>Entry Page</th><th class="num">Contacts</th><th>Signal</th></tr>
-        </thead>
-        <tbody>
-          <tr><td class="bold star">/get-a-demo ★</td><td class="num star bold">High</td><td class="dim">Primary conversion page; highest intent</td></tr>
-          <tr><td class="bold">/</td><td class="num bold">High</td><td class="dim">Homepage — top volume entry point</td></tr>
-          <tr><td>/webinars/the-modern-enablement-engine</td><td class="num">Growing</td><td class="dim">LinkedIn campaign active this week</td></tr>
-          <tr><td>/pricing</td><td class="num">Moderate</td><td class="dim">Price-check intent</td></tr>
-          <tr><td>/why-brainfish</td><td class="num">Moderate</td><td class="dim">Competitive/positioning page</td></tr>
-          <tr><td>/enterprise</td><td class="num">Moderate</td><td class="dim">Enterprise upmarket traffic</td></tr>
-          <tr><td class="dim">/webinars/* (all)</td><td class="num">Growing</td><td class="dim">Webinar content converting to contacts</td></tr>
-          <tr><td>/privacy-policy</td><td class="num">Low</td><td class="dim">Compliance check (regulated industries)</td></tr>
-        </tbody>
-      </table>
-      <div style="padding:8px 14px; background:var(--lgray); font-size:11px; color:var(--dgray); border-top:1px solid var(--border);">
-        ★ /get-a-demo is the highest-intent entry point. Webinar pages are an emerging acquisition channel.
-      </div>
-    </div>
-
-    <div class="card card-half">
-      <div class="card-hdr hdr-orange">
-        Buyer Personas
-        <small>· From 13 launch-period deal contacts</small>
-      </div>
-      <table>
-        <thead>
-          <tr><th>Persona</th><th>Titles</th><th>Primary Pain</th><th class="ctr">Freq.</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="bold" style="color:var(--blue)">Ops / CX Operator</td>
-            <td class="dim">Head of CX, Support Ops Lead, CS Manager</td>
-            <td>Deflect tickets; reduce team load</td>
-            <td class="ctr"><span class="pill pill-blue">Most common</span></td>
-          </tr>
-          <tr>
-            <td class="bold" style="color:var(--green)">Product / Education Leader</td>
-            <td class="dim">Product Manager, Enablement Lead</td>
-            <td>Auto-update docs; scale onboarding</td>
-            <td class="ctr"><span class="pill pill-green">Growing</span></td>
-          </tr>
-          <tr>
-            <td class="bold" style="color:var(--orange)">Regulated-Industry Exec</td>
-            <td class="dim">COO, Head of Risk, Compliance Dir.</td>
-            <td>Audit trails; regulatory compliance</td>
-            <td class="ctr"><span class="pill pill-orange">Highest ACV</span></td>
-          </tr>
-        </tbody>
-      </table>
-      <div style="padding:14px 16px; background:var(--lgray); font-size:12px; color:var(--dgray); border-top:1px solid var(--border); line-height:1.6;">
-        <strong style="color:var(--navy)">Key insight:</strong> Champions are <em>never</em> pure IT buyers.
-        Video Upload cited as a decision driver in virtually every deal.
-        Regulated-Industry exec (e.g. InfoTrack) carries the highest ACV — target with compliance messaging.
-      </div>
-      <!-- Pipeline inset -->
-      <div class="card-hdr hdr-navy" style="margin-top:4px;">Pipeline Snapshot · Mar 12, 2026 <small>· HubSpot ✅</small></div>
-      <table>
-        <thead><tr><th>KPI</th><th class="num">Value</th><th>Source</th></tr></thead>
-        <tbody>
-          <tr><td class="bold">Active Pipeline Value</td><td class="num bold" style="color:var(--blue)">~$767,000+</td><td class="dim">HubSpot ✅</td></tr>
-          <tr><td class="bold">Open Deals</td><td class="num bold">~37</td><td class="dim">HubSpot ✅</td></tr>
-          <tr><td class="bold">Closed-Won (all time)</td><td class="num bold good">79 deals</td><td class="dim">HubSpot ✅</td></tr>
-          <tr><td class="bold">Revenue Tracked (8 mo)</td><td class="num bold good">$309,525</td><td class="dim">HubSpot ✅</td></tr>
-          <tr><td class="bold">Closed-Lost (all time)</td><td class="num bold" style="color:#c62828">425</td><td class="dim">HubSpot ✅</td></tr>
-        </tbody>
-      </table>
-
-      <!-- Closed-Lost Analysis subsection -->
-      <div class="card-hdr hdr-navy" style="margin-top:4px;">Closed-Lost Analysis · Most Recent 200 Deals <small>· HubSpot ✅</small></div>
-      <table>
-        <thead>
-          <tr><th>Loss Category</th><th class="num">Deals</th><th class="num">Share</th><th class="num">Pipeline at Risk</th><th>Marketing Implication</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="bold">No Need / Non-ICP</td>
-            <td class="num">46</td>
-            <td class="num">23%</td>
-            <td class="num">$251K</td>
-            <td class="dim">ICP targeting; better qualification pre-demo</td>
-          </tr>
-          <tr>
-            <td class="bold">Bad Timing (re-engage)</td>
-            <td class="num">38</td>
-            <td class="num">19%</td>
-            <td class="num bold" style="color:#E65100">$657K</td>
-            <td class="dim">Nurture sequences; re-engage pipeline ~38 deals paused</td>
-          </tr>
-          <tr>
-            <td class="bold">Ghosted / Went Dark</td>
-            <td class="num">32</td>
-            <td class="num">16%</td>
-            <td class="num">$239K</td>
-            <td class="dim">Multi-thread earlier; sequence automation post-demo</td>
-          </tr>
-          <tr>
-            <td class="bold">Wrong Decision Maker</td>
-            <td class="num">16</td>
-            <td class="num">8%</td>
-            <td class="num">$74K</td>
-            <td class="dim">Content for Head of Support/CX; avoid Eng-only entry</td>
-          </tr>
-          <tr>
-            <td class="bold">Lost to Competitor</td>
-            <td class="num">14</td>
-            <td class="num">7%</td>
-            <td class="num">$228K</td>
-            <td class="dim">Win/loss battlecards; Intercom &amp; Zendesk displacement plays</td>
-          </tr>
-          <tr>
-            <td class="bold">Budget Constraint</td>
-            <td class="num">13</td>
-            <td class="num">6%</td>
-            <td class="num">$106K</td>
-            <td class="dim">ROI calculator; value-tier framing; trial-first path</td>
-          </tr>
-          <tr>
-            <td class="bold">Use Case Not a Fit</td>
-            <td class="num">9</td>
-            <td class="num">4%</td>
-            <td class="num">$71K</td>
-            <td class="dim">Clearer messaging on what Brainfish does <em>not</em> do</td>
-          </tr>
-          <tr style="border-top:2px solid #1B2A4A;font-weight:700;background:#f5f8ff">
-            <td class="bold">Total (200 analysed)</td>
-            <td class="num bold">200</td>
-            <td class="num bold">100%</td>
-            <td class="num bold" style="color:#c62828">~$1.8M</td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- Competitor signals -->
-      <div style="padding:12px 16px; background:#fff8f0; border-top:2px solid #E65100; font-size:0.78rem; line-height:1.7;">
-        <strong style="color:#E65100">⚔️ Competitor Signals (in loss reasons):</strong>
-        &nbsp; Build vs Buy / Internal: <strong>24 deals</strong> &nbsp;·&nbsp;
-        Zendesk / Zendesk AI: <strong>11 deals</strong> &nbsp;·&nbsp;
-        Intercom / Fin: <strong>10 deals</strong>
-        <br>
-        <strong style="color:#1B2A4A">Top re-engage opportunity:</strong> 38 "Bad Timing" deals represent <strong>$657K in paused pipeline</strong> — these are warm leads, not lost ones.
-        Zendesk AI is frequently bundled free in existing contracts; Intercom/Fin is an "easy add-on." Displacement messaging and a clear switching ROI story are the #1 competitive gaps.
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ Actionable Insights ══════════════════════════════════════════════ -->
-  <div class="card card-full" style="margin-bottom:20px;">
-    <div class="card-hdr" style="background:linear-gradient(90deg,#1B2A4A 0%,#1565C0 100%); display:flex; justify-content:space-between; align-items:center;">
-      <span>⚡ Actionable Insights · Week of Mar 12, 2026</span>
-      <small style="opacity:0.7;">Sources: HubSpot · Clarity · Notion · Linear</small>
-    </div>
-    <div class="insight-hdr-strip">
-      <h3>The story these tools don't tell individually</h3>
-      <span class="ins-sub">Cross-signal synthesis · refreshes weekly</span>
-    </div>
-    <div class="insights-grid">
-
-      <!-- ── COLUMN 1: What's Working ─────────────────────────── -->
-      <div class="insight-col">
-        <div class="insight-col-hdr working"><span class="ico">✅</span> What's Working</div>
-
-        <div class="insight-item w">
-          <div class="insight-title">Homepage V3 conversion efficiency doubled</div>
-          <div class="insight-body">7 form submissions on 40% less traffic post-Feb 24 launch. Dead clicks down -59%, excessive scrolling gone. The new homepage is doing more with less — the UX work is paying off at the bottom of the funnel, not just in vanity metrics.</div>
-          <div class="src-tags"><span class="src src-cl">Clarity</span><span class="src src-nt">Notion</span></div>
-        </div>
-
-        <div class="insight-item w">
-          <div class="insight-title">Organic Search visitors are your highest-quality leads</div>
-          <div class="insight-body">All-time: <strong>74 HubSpot contacts</strong> from Organic Search averaging <strong>6.7 sessions each</strong> — 2.5× higher than Paid Search (1.6) and Paid Social (1.2). These contacts have demonstrated research depth. Organic Search is tied with Direct Traffic for most closed-won deals all time (7 each), generating $57.7K in revenue since Aug 2025. High-engagement channel that actually converts.</div>
-          <div class="src-tags"><span class="src src-hs">HubSpot</span></div>
-        </div>
-
-        <div class="insight-item w">
-          <div class="insight-title">LinkedIn organic momentum is real</div>
-          <div class="insight-body">+197 new followers (+347.7%) and 27K+ impressions w/w. Lija's welcome post hit 7.5% CTR. IWD carousel shipped (Linear MKT-156). The audience is growing; this week even generated 3 webinar contacts via LinkedIn — organic social is converting for events.</div>
-          <div class="src-tags"><span class="src src-li">LinkedIn</span><span class="src src-hs">HubSpot</span><span class="src src-ln">Linear</span></div>
-        </div>
-
-        <div class="insight-item w">
-          <div class="insight-title">Kloud Connect case study fully shipped</div>
-          <div class="insight-body">Customer sign-off, LinkedIn carousel creatives, website page, and promo plan all completed (MKT-127 → MKT-153). Case study is live and ready to amplify. The social creatives are done — this just needs distribution fuel (paid promotion, email, outbound).</div>
-          <div class="src-tags"><span class="src src-ln">Linear</span></div>
-        </div>
-
-        <div class="insight-item w">
-          <div class="insight-title">Webinar machine is fully built</div>
-          <div class="insight-body">LP, HubSpot setup, email invite R1, Zoom workflow, promo copy, and deck polish all marked Done in Linear (MKT-145 → MKT-152). The infrastructure is there. Every webinar now has <24h setup time. With 3 webinar-driven contacts this week via LinkedIn, this channel is showing early signs of compounding.</div>
-          <div class="src-tags"><span class="src src-ln">Linear</span><span class="src src-hs">HubSpot</span></div>
-        </div>
-
-        <div class="insight-item w">
-          <div class="insight-title">Paid ad creative works — 168K impressions, 11.35% CTR</div>
-          <div class="insight-body">"Cost of Building vs. Buying AI Support" doc ad is outperforming industry benchmarks by 4–5×. High-CTR content exists. The creative formula (direct comparison content, decision-stage framing) is proven — the question is whether landing pages convert the clicks.</div>
-          <div class="src-tags"><span class="src src-nt">Notion</span></div>
-        </div>
-
-      </div>
-
-      <!-- ── COLUMN 2: What's Not Working ─────────────────────── -->
-      <div class="insight-col">
-        <div class="insight-col-hdr notwork"><span class="ico">⚠️</span> What's Not Working</div>
-
-        <div class="insight-item nw">
-          <div class="insight-title">Paid Social: 126 contacts, 1 closed-won deal all time</div>
-          <div class="insight-body">All-time: <strong>126 HubSpot contacts</strong> from Paid Social, averaging just <strong>1.2 sessions each</strong> — the lowest engagement of any digital channel. Only <strong>1 closed-won deal</strong> ever (BriteBiz, $14,400 in Nov 2025). Contacts from Paid Social rarely return after first touch. Without a retargeting or nurture layer, spend is generating weak leads that don't convert.</div>
-          <div class="src-tags"><span class="src src-hs">HubSpot</span></div>
-        </div>
-
-        <div class="insight-item nw">
-          <div class="insight-title">Paid Search: 241 contacts, 2 closed-won deals — low session depth</div>
-          <div class="insight-body">All-time: <strong>241 HubSpot contacts</strong> from Paid Search averaging just <strong>1.6 sessions each</strong> — suggesting one-and-done visits with low return intent. Only <strong>2 closed-won deals</strong> (Huntress $28,190 + i2i Logic $9,600 = $37,790 total). That's a cost-per-deal that likely exceeds the channel's efficiency threshold. Landing pages may be misaligned with ad intent — visitors aren't being nurtured post-click.</div>
-          <div class="src-tags"><span class="src src-hs">HubSpot</span></div>
-        </div>
-
-        <div class="insight-item nw">
-          <div class="insight-title">Pricing page: 5,974 views, 2 key events (0.03% KE rate)</div>
-          <div class="insight-body">The pricing page is your highest commercial-intent page outside /get-a-demo, but almost nobody converts. It's getting 33% more visits w/w (Clarity). These are buyers — they're just not clicking. The CTA placement, pricing model framing, or lack of social proof is killing conversions at the most critical moment.</div>
-          <div class="src-tags"><span class="src src-cl">Clarity</span></div>
-        </div>
-
-        <div class="insight-item nw">
-          <div class="insight-title">Core Web Vitals: LCP 3.3s — failing Google's threshold</div>
-          <div class="insight-body">LCP should be under 2.5s for "Good" rating. At 3.3s you're in "Needs Improvement." This directly impacts Organic Search ranking. Performance score 77/100, CLS 0.17 (borderline). Technical SEO fixes were worked on in March but the LCP issue likely needs image optimisation or server-side work.</div>
-          <div class="src-tags"><span class="src src-cl">Clarity</span><span class="src src-ln">Linear</span></div>
-        </div>
-
-        <div class="insight-item nw">
-          <div class="insight-title">ICP mismatch: winning &lt;20 FTE, marketing targets Series B+</div>
-          <div class="insight-body">Pipeline analysis shows 8 of 19 wins are companies with &lt;20 FTE — below your stated ICP of 100–1,000 FTE. The Tier 1B (largest accounts) has 0% win rate. Either the product currently over-delivers for SMB, or the messaging is attracting the wrong buyers. The Kloud Connect case study (an SMB win) could be reinforcing the wrong signal.</div>
-          <div class="src-tags"><span class="src src-nt">Notion</span><span class="src src-hs">HubSpot</span></div>
-        </div>
-
-        <div class="insight-item nw">
-          <div class="insight-title">Quick backs: 33 sessions bouncing from entry pages</div>
-          <div class="insight-body">2.21% quick-back rate means visitors are landing and immediately hitting Back — page content doesn't match their expectation. This is usually a sign that ads, search snippets, or referral anchors are setting up a different expectation than the page delivers. Worth mapping the entry URLs to identify the worst offenders.</div>
-          <div class="src-tags"><span class="src src-cl">Clarity</span></div>
-        </div>
-
-      </div>
-
-      <!-- ── COLUMN 3: Investigate & Reinvest ──────────────────── -->
-      <div class="insight-col">
-        <div class="insight-col-hdr explore"><span class="ico">🔍</span> Investigate &amp; Reinvest</div>
-
-        <div class="insight-item ex">
-          <div class="insight-title">Microsoft Teams launch — engineering shipped, marketing hasn't</div>
-          <div class="insight-body">Engineering completed 20+ Teams issues in February–March (Teams bot parity, multi-workspace channels, Slack-parity experience, integrations API). There are zero active MKT Linear tickets for a Teams launch. The product is ready — there's a first-mover window to own the "Brainfish for Teams" narrative before competitors catch up. ICP for Teams is enterprise, where win rates are currently lowest.</div>
-          <div class="src-tags"><span class="src src-ln">Linear</span></div>
-        </div>
-
-        <div class="insight-item ex">
-          <div class="insight-title">chatgpt.com + GEO: Emerging referral channel, strategic plan exists</div>
-          <div class="insight-body">chatgpt.com is appearing as a referral source in Clarity and Notion weekly reports. A "10x AI Traffic" GEO Optimization Plan already exists in Notion. Image upload as context just shipped (BF-3497, BF-3498, BF-3668). This is the right moment to invest in answer engine optimization — optimise for "best AI customer support tool" queries before this channel matures.</div>
-          <div class="src-tags"><span class="src src-cl">Clarity</span><span class="src src-nt">Notion</span><span class="src src-ln">Linear</span></div>
-        </div>
-
-        <div class="insight-item ex">
-          <div class="insight-title">Pricing page CTA needs a redesign experiment</div>
-          <div class="insight-body">5,974 visits, +33% w/w growth, and only 2 key events. This is the most fixable high-leverage conversion problem on the site. Low-effort test: add a "Talk to sales" secondary CTA alongside the demo form, add 2–3 customer logos near the pricing tiers, and track KE delta over 2 weeks. A/B test with Wynter insights once messaging test results are in.</div>
-          <div class="src-tags"><span class="src src-cl">Clarity</span><span class="src src-nt">Notion</span></div>
-        </div>
-
-        <div class="insight-item ex">
-          <div class="insight-title">Webinar as a systematic demand gen channel</div>
-          <div class="insight-body">This week: 3 contacts sourced via LinkedIn Social driving to the webinar page. The infrastructure is built. Webinars generated 3 registrations this week. If each webinar reliably generates 50–100 registrations, and 5–10% convert to demos, that's a scalable pipeline. Consider a monthly cadence, topic calendar, and webinar replay library for SEO.</div>
-          <div class="src-tags"><span class="src src-hs">HubSpot</span><span class="src src-ln">Linear</span></div>
-        </div>
-
-        <div class="insight-item ex">
-          <div class="insight-title">Image upload as context — new capability, not in marketing narrative yet</div>
-          <div class="insight-body">Engineering just shipped image upload as AI context (provider-agnostic format, widget integration, backend storage — BF-3668/3498/3497). This is a meaningful capability gap-closer vs competitors. Not visible anywhere in marketing materials. Could unlock use cases in visual-heavy industries (e-commerce, SaaS with UI-heavy products) and should inform the next campaign brief.</div>
-          <div class="src-tags"><span class="src src-ln">Linear</span></div>
-        </div>
-
-        <div class="insight-item ex">
-          <div class="insight-title">Build vs Buy is your #1 sales objection — your best ad already addresses it</div>
-          <div class="insight-body">24 of the last 200 closed-lost deals cite internal builds or "build vs buy" framing (DISH, GoTab, Zapier, Paycor, NEOGOV and more). Zendesk AI bundling (11 deals) and Intercom/Fin as easy add-ons (10 deals) are #2 and #3. The "Cost of Building vs. Buying AI Support" doc ad already has 168K impressions at 11.35% CTR — the content resonates, but it's not making it deep into the sales cycle. Turn it into a battlecard, a dedicated landing page, and a mid-funnel email sequence. Competitors win on convenience and existing contracts, not product quality.</div>
-          <div class="src-tags"><span class="src src-hs">HubSpot</span><span class="src src-nt">Notion</span></div>
-        </div>
-
-        <div class="insight-item ex">
-          <div class="insight-title">$657K in "Bad Timing" pipeline needs a nurture sequence now</div>
-          <div class="insight-body">38 closed-lost deals (19%) are categorised as Bad Timing — representing <strong>$657K in paused pipeline</strong>. These aren't lost, they're sleeping. Nearmap ($38K, "rebook in April"), Cartwheel ($16K, "re-engage late April"), Fat Zebra ($36K, "no bandwidth"), Fortiro ($30K, "H2 2026 project"). Without a systematic re-engage sequence, these warm leads will be re-discovered cold by a competitor. Build a 90-day nurture track: value email at 30 days → case study at 60 days → direct re-engage at 90 days.</div>
-          <div class="src-tags"><span class="src src-hs">HubSpot</span></div>
-        </div>
-
-        <div class="insight-item ex">
-          <div class="insight-title">ICP audit: lean into &lt;200 FTE wins or fix the funnel for enterprise</div>
-          <div class="insight-body">With 0% win rate at Tier 1B (largest), the data suggests either the product-market fit is strongest in growth-stage companies, or enterprise deals are being lost to competitive displacement. Run a closed-won cohort analysis: what's the average FTE, industry, and time-to-close for your 79 wins? Then align messaging, case studies, and ad targeting to match — or fix what's losing enterprise deals.</div>
-          <div class="src-tags"><span class="src src-nt">Notion</span><span class="src src-hs">HubSpot</span></div>
-        </div>
-
-      </div>
-    </div><!-- /insights-grid -->
-  </div>
-
-
-
-  <!-- ══ HubSpot Contact Attribution ══════════════════════════════════════ -->
-  <div class="section-wrap" style="margin-top:2rem">
-    <div class="section-hdr">
-      <span>📊 Contact Attribution by Channel · All Time (HubSpot ✅)</span>
-    </div>
-    <p style="font-size:0.78rem;color:#555;margin:0.4rem 1rem 1rem;">
-      Based on <strong>1,078 web-sourced HubSpot contacts</strong> (excludes 30,064 offline/imported contacts). 
-      Source = <code>hs_analytics_source</code>. Deals = all-time closed-won attributed to that source channel.
-    </p>
-
-    <div style="overflow-x:auto;margin:0 1rem 1.5rem;">
-      <table class="data-table" style="width:100%;font-size:0.82rem;">
-        <thead>
-          <tr>
-            <th>Channel</th>
-            <th class="num">Contacts</th>
-            <th class="num">Share</th>
-            <th class="num">Avg Sessions</th>
-            <th class="num">Deals (all-time)</th>
-            <th class="num">Revenue (Aug 25–Mar 26)</th>
-            <th>Signal</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="bold">Direct Traffic</td>
-            <td class="num">484</td>
-            <td class="num">44.9%</td>
-            <td class="num">2.7</td>
-            <td class="num bold">7</td>
-            <td class="num">$127,479</td>
-            <td><span style="color:#1A7F3C">✅ High volume, converts</span></td>
-          </tr>
-          <tr>
-            <td class="bold">Paid Search</td>
-            <td class="num">241</td>
-            <td class="num">22.4%</td>
-            <td class="num">1.6</td>
-            <td class="num">2</td>
-            <td class="num">$37,790</td>
-            <td><span style="color:#E65100">⚠️ Low engagement depth</span></td>
-          </tr>
-          <tr>
-            <td class="bold">Paid Social</td>
-            <td class="num">126</td>
-            <td class="num">11.7%</td>
-            <td class="num">1.2</td>
-            <td class="num">1</td>
-            <td class="num">$14,400</td>
-            <td><span style="color:#c62828">🔴 Weakest ROI signal</span></td>
-          </tr>
-          <tr>
-            <td class="bold">Organic Search</td>
-            <td class="num">74</td>
-            <td class="num">6.9%</td>
-            <td class="num bold" style="color:#1A7F3C">6.7</td>
-            <td class="num bold">7</td>
-            <td class="num">$57,700</td>
-            <td><span style="color:#1A7F3C">✅ Highest intent, converts</span></td>
-          </tr>
-          <tr>
-            <td class="bold">Email Marketing</td>
-            <td class="num">64</td>
-            <td class="num">5.9%</td>
-            <td class="num">1.4</td>
-            <td class="num">—</td>
-            <td class="num">—</td>
-            <td><span style="color:#555">ℹ️ No CRM attribution yet</span></td>
-          </tr>
-          <tr>
-            <td class="bold">Other Campaigns</td>
-            <td class="num">51</td>
-            <td class="num">4.7%</td>
-            <td class="num">0.9</td>
-            <td class="num">—</td>
-            <td class="num">—</td>
-            <td><span style="color:#555">ℹ️ Mixed/uncategorised</span></td>
-          </tr>
-          <tr>
-            <td class="bold">Referrals</td>
-            <td class="num">20</td>
-            <td class="num">1.9%</td>
-            <td class="num">2.6</td>
-            <td class="num">—</td>
-            <td class="num">—</td>
-            <td><span style="color:#2E6DB4">🔵 High engagement, small volume</span></td>
-          </tr>
-          <tr>
-            <td class="bold">Organic Social</td>
-            <td class="num">17</td>
-            <td class="num">1.6%</td>
-            <td class="num">1.9</td>
-            <td class="num">—</td>
-            <td class="num">—</td>
-            <td><span style="color:#555">ℹ️ Early stage, growing</span></td>
-          </tr>
-          <tr style="border-top:2px solid #1B2A4A;font-weight:700;background:#f5f8ff">
-            <td class="bold">Total (web-sourced)</td>
-            <td class="num bold">1,078</td>
-            <td class="num bold">100%</td>
-            <td class="num bold">—</td>
-            <td class="num bold">17</td>
-            <td class="num bold">$237,369</td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <p style="font-size:0.73rem;color:#888;margin:0 1rem 0.5rem;">
-      ★ Deal counts include all 79 all-time closed-won. Revenue column shows deals closed Aug 2025–Mar 2026 only (confirmed HubSpot data). 
-      Offline/imported contacts (30,064) and their deals are excluded from this table.
-      Email Marketing and campaign-source deal attribution requires manual CRM tagging review.
-    </p>
-  </div>
-
-
-</div><!-- /main -->
-
-<footer>
-  <strong>Brainfish Marketing Dashboard</strong> &nbsp;·&nbsp;
-  Pipeline, deals, contact traffic &amp; Insights refresh every Monday via HubSpot + Linear &nbsp;·&nbsp;
-  Built with Claude Cowork
-</footer>
-
 </body>
 </html>
