@@ -187,6 +187,40 @@
         </table>
     </div>
 
+    <!-- WIN / LOSS REASONS -->
+    <div class="section">
+        <h2>🏆 Why We're Winning / Losing (Last 30 Days)</h2>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+            <div>
+                <h3 style="font-size:13px; color:#1A7F3C; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px; padding-bottom:8px; border-bottom:2px solid #1A7F3C;">✅ Why We're Winning</h3>
+                <p style="font-size:12px; color:#888; margin-bottom:12px;">3 closed-won deals: Fat Zebra $39.3K, InfoTrack $35K, Pave $12.5K. <strong>The <code>closed_won_reason</code> field exists in HubSpot but is not being filled in</strong> — win pattern analysis requires this. Signals below are inferred from deal source and profile.</p>
+                <table>
+                    <thead><tr><th>Signal</th><th>Evidence</th></tr></thead>
+                    <tbody>
+                        <tr><td>Organic &amp; direct inbound intent</td><td>InfoTrack (organic search), Fat Zebra (direct) — arrived with clear intent, no cold outreach needed</td></tr>
+                        <tr><td>Mid-market B2B SaaS / fintech profile</td><td>All 3 recent wins are newbusiness in tech/fintech, consistent with historical wins (HireVue, Huntress, Coassemble)</td></tr>
+                        <tr><td>Expansion from existing customers</td><td>Coassemble expansion ($5K) alongside net-new — signals healthy retention and land-and-expand motion</td></tr>
+                    </tbody>
+                </table>
+                <p style="font-size:11px; color:#E65100; margin-top:10px;">⚠️ Ask sales to fill in <code>closed_won_reason</code> in HubSpot — field exists but blank on all won deals.</p>
+            </div>
+            <div>
+                <h3 style="font-size:13px; color:#E65100; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px; padding-bottom:8px; border-bottom:2px solid #E65100;">❌ Why We're Losing</h3>
+                <p style="font-size:12px; color:#888; margin-bottom:12px;">20 closed-lost deals in last 30 days. Reasons from HubSpot <code>closed_lost_reason</code> field.</p>
+                <table>
+                    <thead><tr><th>Theme</th><th>#</th><th>Examples</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Timing — not ready yet</strong></td><td>8</td><td>Cartwheel (re-engage Apr), Squiz (no budget till Jul), Nearmap (new RevOps lead), Grammarly (revisiting H2)</td></tr>
+                        <tr><td><strong>Ghosted / no engagement</strong></td><td>4</td><td>Doover, Workiva, Dragonfly (CTO ghosted), Constant Contact</td></tr>
+                        <tr><td><strong>Lost to competitor</strong></td><td>3</td><td>MuckRack → Intercom Fin (easy add-on to existing sub), QGenda → Pendo, VenueSumo (diff direction)</td></tr>
+                        <tr><td><strong>ICP / product mismatch</strong></td><td>3</td><td>Bright Money (B2C, too small), Planhat (needs text ingestion), Obvious/Flatfile (build vs buy)</td></tr>
+                        <tr><td><strong>No-show</strong></td><td>2</td><td>Robust Web Solution, Pacific Plant Nutrients</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <!-- CHANNEL TRAFFIC -->
     <div class="section">
         <h2>🔗 Channel Weekly Pulse — Mar 13–20</h2>
