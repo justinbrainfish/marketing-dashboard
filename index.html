@@ -190,7 +190,7 @@
     <!-- WIN / LOSS REASONS -->
     <div class="section">
         <h2>🏆 Why We're Winning / Losing (Last 30 Days)</h2>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px;">
             <div>
                 <h3 style="font-size:13px; color:#1A7F3C; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px; padding-bottom:8px; border-bottom:2px solid #1A7F3C;">✅ Why We're Winning</h3>
                 <p style="font-size:12px; color:#888; margin-bottom:12px;">3 closed-won deals: Fat Zebra $39.3K, InfoTrack $35K, Pave $12.5K. <strong>The <code>closed_won_reason</code> field exists in HubSpot but is not being filled in</strong> — win pattern analysis requires this. Signals below are inferred from deal source and profile.</p>
@@ -217,6 +217,22 @@
                         <tr><td><strong>No-show</strong></td><td>2</td><td>Robust Web Solution, Pacific Plant Nutrients</td></tr>
                     </tbody>
                 </table>
+            </div>
+            <div>
+                <h3 style="font-size:13px; color:#006064; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px; padding-bottom:8px; border-bottom:2px solid #006064;">🎤 What Prospects Are Asking For</h3>
+                <p style="font-size:12px; color:#888; margin-bottom:12px;">Themes from 6 external call transcripts, Dec 2025–Mar 2026</p>
+                <table>
+                    <thead><tr><th>Topic</th><th>Freq</th><th>Marketing Implication</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Content sync with product releases</strong></td><td>2</td><td>Help documentation must update simultaneously with product launches, not weeks after.</td></tr>
+                        <tr><td><strong>Analytics filtering options</strong></td><td>2</td><td>Customers need null/not filters and custom attribute exports for advanced segmentation.</td></tr>
+                        <tr><td><strong>Human handoff in-widget</strong></td><td>2</td><td>Conversation preservation through handoff to live agents (Zendesk/Slack integration).</td></tr>
+                        <tr><td><strong>Custom AI instructions</strong></td><td>2</td><td>Rules engine for AI responses (phone redaction, tone, style) without code.</td></tr>
+                        <tr><td><strong>LMS integration</strong></td><td>1</td><td>Workramp / SCORM compatibility for embedded customer learning.</td></tr>
+                        <tr><td><strong>API doc import</strong></td><td>1</td><td>Bulk migration from Readme and legacy systems with style consistency.</td></tr>
+                    </tbody>
+                </table>
+                <p style="font-size:11px; color:#888; margin-top:10px; text-align:right;">Source: Avoma call notes</p>
             </div>
         </div>
     </div>
@@ -366,6 +382,18 @@
             <!-- INVESTIGATE & REINVEST -->
             <div class="insight-col investigate">
                 <div class="insight-col-header">🔍 Investigate & Reinvest</div>
+
+                <div class="insight-card">
+                    <h4>In-widget human handoff (Zendesk/Slack) — strong demand signal</h4>
+                    <p>Huntress onboarding calls + Branch demo both requested in-widget handoff to live agents with conversation preservation. They're evaluating integrations with Zendesk, Slack, and Front. Engineering working on prototype (3–4 week delivery). This should be front-and-center in Q2 positioning as a key differentiation vs pure AI.</p>
+                    <span class="source-tag">Avoma</span>
+                </div>
+
+                <div class="insight-card">
+                    <h4>Content sync + LMS integration — structural product gap</h4>
+                    <p>Branch (major prospect, Amma Hawks evaluating), Fat Zebra (just closed), and Huntress all cited content-sync friction: product releases outpace documentation, knowledge fragmentation across Slack/Jira/Confluence. Opportunity to bundle: (1) content sync tooling, (2) LMS integration (Workramp), (3) API doc import. No MKT narrative yet, but closing more Branch and expanding into enterprises will drive this.</p>
+                    <span class="source-tag">Avoma</span>
+                </div>
 
                 <div class="insight-card">
                     <h4>Claude 4.5 model upgrade shipped — no MKT ticket yet</h4>
